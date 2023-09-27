@@ -15,6 +15,10 @@ class VK:
        url = 'https://api.vk.com/method/users.get'
        params = {'user_ids': self.id}
        response = requests.get(url, params={**self.params, **params})
+       response_json = response.json()
+       error = response_json.get('error', '')
+       if type(error) == dict:
+           return error.get('error_msg', 'Ошибка авторизации')
        return response.json()
 
    def get_list_url_foto(self, max_foto=5):
@@ -92,7 +96,10 @@ if __name__ == '__main__':
     vk = VK(access_token_VK, user_id)
     user_data = vk.users_info()
 
-    if len(user_data.get('response', [])) == 0:
+    if type(user_data) == str:
+        print(user_data)
+        exit()
+    elif len(user_data.get('response', [])) == 0:
         print(f'Пользователь с ID {user_id} не найден')
         exit()
 
