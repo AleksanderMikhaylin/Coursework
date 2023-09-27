@@ -89,7 +89,7 @@ class YD:
         return response_list
 
 if __name__ == '__main__':
-    access_token_VK = 'vk1.a.kzkQQZvzd5f7ITrgY172u9eY0_p9oyET01UiZQmnGxhlmqp5wC6bM5IF8ZNoVCVAY7ALbbNJ2UsqgvJYVoQRobX1VkQpzW2TGQJMwWaYCyyZehOaKVDxpDaE71-jzMueCc60D3RD2N4s3OERnIniwzIchsvbULZe20HUx5biMb1-fQ-d2CfD5FGof2cqvGWkxT4QZ99GefDzWFhePZcqSw'
+    access_token_VK = 'vk1.a.3iDesuaArYD0n73O1j7mJF0ZWuCmBGb6ZBX1otl5Kzh0MEwfYbOUeLLY4wF4FtXzdHYlH7MmqPAdVcCi6fsPhQd_-ZwIrf2baTUmVfwWY5ny6_2D9G4kfJCitW254qLOCqkicl95oQ2QCRsxEc8RrCSgLOIZyjsWFNDbjh9vOiEkv69h-A_c5rPX2jxHfXxt0x7WEj_QZJBfbKuXsMgEnQ'
     user_id = input('Введите ID пользователя VK: ')
     access_token_YD = input('Введите токен с Полигона Яндекс.Диска: ')
 
