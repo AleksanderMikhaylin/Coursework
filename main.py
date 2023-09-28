@@ -1,4 +1,6 @@
 import json
+import time
+
 import requests
 from tqdm import tqdm
 from pprint import pprint
@@ -49,7 +51,7 @@ class VK:
            sizes = sorted(item['sizes'], key=lambda i: (i['height'], i['width']), reverse=True)
            attr_list = sizes[0]["url"].split("?")[0].split(".")
            exp = attr_list[len(attr_list) - 1]
-           date_file = datetime.utcfromtimestamp(item['date']).strftime('%Y-%m-%d %H:%M:%S')
+           date_file = datetime.utcfromtimestamp(item['date']).strftime('%Y_%m_%d_%H_%M_%S')
            file_name = f'{item.get("likes", {}).get("count", 0)}'
            if file_name in list_file_name:
                file_name = file_name + '_' + date_file
@@ -97,6 +99,7 @@ class YD:
             params['url'] = item['url']
             params['path'] = f'{folder_name}/{item["file_name"]}'
             response = requests.post(self.base_url + '/v1/disk/resources/upload', headers=headers, params=params)
+            time.sleep(1)
             response_list.append({
                 'file_name': item["file_name"],
                 'size': item["size"],
