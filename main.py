@@ -3,7 +3,6 @@ import time
 
 import requests
 from tqdm import tqdm
-from pprint import pprint
 from datetime import datetime
 
 class VK:
@@ -68,31 +67,31 @@ class YD:
     def __init__(self):
         self.base_url = 'https://cloud-api.yandex.net'
 
-    def upload_file_list(self, access_token, folder_name, file_list):
-        headers = {
-            'Authorization': access_token
-        }
-        params = {
-            'path': '/'
-        }
+    def check_folder(self, access_token, folder_name, headers, params):
 
+        is_folder = True
         response = requests.get(self.base_url + '/v1/disk/resources', headers = headers, params = params)
-        if not response.status_code == 200:
-            return "При обращении к Яндекс Диску произошла ошибка: " + response.json().get('message')
-
-        is_folder = False
-        list_folders = response.json().get('_embedded',{}).get('items', [])
-        for folder in list_folders:
-            if folder.get('name') == folder_name:
-                is_folder = True
-                break
+        if response.status_code == 404:
+            is_folder = False
 
         if not is_folder:
             params['path'] = folder_name
             response = requests.put(self.base_url + '/v1/disk/resources', headers=headers, params=params)
 
             if not response.status_code == 201:
-                return "При обращении к Яндекс Диску произошла ошибка: " + response.json().get('message', f'Ошибка создания каталога {folder_name}')
+                print("При обращении к Яндекс Диску произошла ошибка: " + response.json().get('message', f'Ошибка создания каталога {folder_name}'))
+                exit()
+
+    def upload_file_list(self, access_token, folder_name, file_list):
+
+        headers = {
+            'Authorization': access_token
+        }
+        params = {
+            'path': folder_name
+        }
+
+        self.check_folder(access_token, folder_name, headers, params)
 
         response_list = []
         for item in tqdm(file_list, desc='Загрузка списка фотографий на YD'):
@@ -105,7 +104,10 @@ class YD:
                 'size': item["size"],
             })
 
-        return response_list
+        with open('results.json', 'w') as f:
+            f.writelines(json.dumps(response_list))
+            f.close()
+
 
 if __name__ == '__main__':
 
@@ -121,10 +123,3 @@ if __name__ == '__main__':
 
     yd = YD()
     response_list = yd.upload_file_list(access_token_YD, 'Image_VK', list_url_foto)
-
-    if type(response_list) == list:
-        with open('requiremеnts.json', 'w') as f:
-            f.writelines(json.dumps(response_list))
-            f.close()
-    else:
-        pprint(response_list)
