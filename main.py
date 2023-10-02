@@ -69,15 +69,9 @@ class YD:
 
     def check_folder(self, access_token, folder_name, headers, params):
 
-        is_folder = True
         response = requests.get(self.base_url + '/v1/disk/resources', headers = headers, params = params)
         if response.status_code == 404:
-            is_folder = False
-
-        if not is_folder:
-            params['path'] = folder_name
             response = requests.put(self.base_url + '/v1/disk/resources', headers=headers, params=params)
-
             if not response.status_code == 201:
                 print("При обращении к Яндекс Диску произошла ошибка: " + response.json().get('message', f'Ошибка создания каталога {folder_name}'))
                 exit()
